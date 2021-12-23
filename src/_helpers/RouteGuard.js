@@ -8,7 +8,6 @@ const RouteGuard = ({component: RouteComponent, ...rest}) => {
         <Route 
             {...rest} 
             render = {props => {
-                console.log(user);
                 if (user) {
                     return <RouteComponent {...props} />
                 } else {
