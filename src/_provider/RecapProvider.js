@@ -24,6 +24,7 @@ const RecapProvider = (props) => {
     }
 
     useEffect(() => {
+        let mounted = true;
         const date = new Date().toISOString().substring(0, 7);
         recapDB
             .where('userId', '==', currentUser.uid)
@@ -33,10 +34,16 @@ const RecapProvider = (props) => {
                     createRecap(date);
                 } else {
                     const data = response.docs[0].data();
-                    setData(data);
+                    if (mounted) {
+                        setData(data);
+                    }
                 }
-            })
+            });
+        return () => {
+            mounted = false;
+        }
     }, []);
+
     return ( 
         <RecapContext.Provider value={data}>
             {props.children}

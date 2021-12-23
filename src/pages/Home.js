@@ -35,7 +35,14 @@ const Home = () => {
     }
 
     useEffect(() => {
-        getShoppingList();
+        let mounted = true;
+        if (mounted) {
+            getShoppingList();
+        }
+
+        return () => {
+            mounted = false;
+        }
     }, []);
 
     return (

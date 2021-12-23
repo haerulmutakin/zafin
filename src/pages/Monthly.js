@@ -32,7 +32,14 @@ const Graph = () => {
     }
 
     useEffect(() => {
-        getMonthlyReport();
+        let mounted = true;
+        if (mounted) {
+            getMonthlyReport();
+        }
+
+        return () => {
+            mounted = false;
+        }
     }, []);
     return ( 
         <div className="fitwidth">
