@@ -3,10 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { Auth } from "_firebaseconn/firebase.config";
 import firebaseDB from '_firebaseconn/firebase.config';
 import { AuthContext } from '_provider/AuthProvider';
+import { RecapContext } from '_provider/RecapProvider';
 
 const ShoppingForm = ({title}) => {
     const outcomeDB = firebaseDB.firestore().collection('pengeluaran');
+    const recapDB = firebaseDB.firestore().collection('rekap');
     const currentUser = useContext(AuthContext);
+    const recap = useContext(RecapContext);
 
     let focusInput = null;
     const [name, setName] = useState('');
@@ -19,6 +22,12 @@ const ShoppingForm = ({title}) => {
     }
     
     const submit = () => {
+        addShoppingList();
+        updateRecap();
+        reset();
+    }
+
+    const addShoppingList = () => {
         const date = new Date();
         const payload = {
             id: uuidv4(),
@@ -31,7 +40,15 @@ const ShoppingForm = ({title}) => {
         outcomeDB
             .doc(payload.id)
             .set(payload);
-        reset();
+    }
+
+    const updateRecap = () => {
+        const recapPayload = recap;
+        const total = Number(recapPayload.total) + Number(price.replaceAll('.', ''));
+        recapPayload.total = total.toString();
+        recapDB
+            .doc(recapPayload.id)
+            .update(recapPayload);
     }
 
     const reset = () => {
@@ -66,8 +83,8 @@ const ShoppingForm = ({title}) => {
                 <input ref={(input) => focusInput = input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="nama barang..." />
                 <input type="text" value={price} onChange={handlePriceChange} placeholder="harga..."/>
                 <div className="btn-group">
-                    <button onClick={doLogout}>Reset</button>
-                    <button onClick={submit} >Simpan</button>
+                    <button className="btn-danger" onClick={doLogout}>Reset</button>
+                    <button className="btn-primary" onClick={submit} >Simpan</button>
                 </div>
             </div>
         </React.Fragment>

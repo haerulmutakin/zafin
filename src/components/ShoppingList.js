@@ -1,7 +1,27 @@
-const ShoppingList = ({data, onDelete}) => {
+import { useContext } from 'react';
+import firebaseDB from '_firebaseconn/firebase.config';
+import { RecapContext } from '_provider/RecapProvider';
+
+const ShoppingList = ({data, deleteable = false}) => {
+    const outcomeDB = firebaseDB.firestore().collection('pengeluaran');
+    const recapDB = firebaseDB.firestore().collection('rekap');
+    const recap = useContext(RecapContext);
+
+    const handleDelete = (data) => {
+        outcomeDB.doc(data.id).delete();
+        updateRecap(data);
+    }
+
+    const updateRecap = (data) => {
+        const recapPayload = recap;
+        const total = Number(recapPayload.total) - Number(data.price.replaceAll('.', ''));
+        recapPayload.total = total.toString();
+        recapDB
+            .doc(recapPayload.id)
+            .update(recapPayload);
+    }
     return ( 
         <div className="shopping-list">
-            <h4>Pengeluaran hari ini</h4>
             <div className="sl-items">
                 {data.map((item) => (
                     <div key={item.id} className="sl-item">
@@ -9,7 +29,7 @@ const ShoppingList = ({data, onDelete}) => {
                             <p>{item.name}</p>
                             <p className="item-price">{item.price_label}</p>
                         </div>
-                        <span className="btn-del" onClick={() => onDelete(item.id)}>&#10005;</span>
+                        {deleteable && <span className="btn-del" onClick={() => handleDelete(item)}>&#10005;</span> }
                     </div>
                 ))}
             </div>
