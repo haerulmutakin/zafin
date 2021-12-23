@@ -1,23 +1,19 @@
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Survey from 'pages/Survey';
-import Monthly from 'pages/Monthly';
+import AuthProvider from '_provider/AuthProvider';
+import RouteGuard from '_helpers/RouteGuard';
+import Login from 'pages/Login';
+import Core from 'core/Core';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <div className="main">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/monthly" component={Monthly} />
-            <Route path="/survey" component={Survey} />
-          </Switch>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <RouteGuard path="/" component={Core} />
+          <Route exact path="/login" component={Login} />
         </div>
-      </div>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }
 

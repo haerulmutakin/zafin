@@ -14,11 +14,11 @@ const Navbar = () => {
                     <NavLink to="/monthly" activeClassName="active">
                         <FontAwesomeIcon icon={faCalendar} />
                     </NavLink>
-                    <NavLink to="/summary" activeClassName="active">
-                        <FontAwesomeIcon icon={faChartLine} />
-                    </NavLink>
                     <NavLink to="/survey" activeClassName="active">
                         <FontAwesomeIcon icon={faListAlt} />
+                    </NavLink>
+                    <NavLink to="/summary" activeClassName="active">
+                        <FontAwesomeIcon icon={faChartLine} />
                     </NavLink>
                 </div>
             </div>

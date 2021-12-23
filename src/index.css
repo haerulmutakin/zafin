@@ -47,6 +47,24 @@ nav {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
+.login {
+  padding: 0 10px;
+  text-align: center;
+  margin-top: 80px;
+}
+
+.login img {
+  width: 150px;
+}
+
+.login .form {
+  margin-top: 20px;
+}
+
+.login button {
+  width: 100%;
+}
+
 .nav {
   width: 450px;
   padding: 10px 0;
@@ -56,6 +74,7 @@ nav {
 }
 
 .nav h1 {
+  font-size: 24px;
   margin-bottom: 0 !important;
 }
 
@@ -63,14 +82,16 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 10px;
 }
 
 .menu a {
   margin-left: 8px;
   text-decoration: none;
   color: inherit;
+  font-size: 20px;
   text-transform: uppercase;
-  padding: 5px 10px;
+  padding: 3px 15px;
   border-radius: 4px;
 }
 
@@ -89,7 +110,7 @@ a.active {
   box-sizing: border-box !important;
 }
 
-.home {
+.fitwidth {
   width: 450px;
   margin: 0 auto;
 }
@@ -106,21 +127,44 @@ a.active {
 }
 
 .box {
-  grid-column: auto/span 6;
   padding: 10px;
   border-radius: 4px;
-  text-align: center;
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
+.box svg {
+  font-size: 36px;
+}
+
+.box div {
+  margin-left: 10px;
+}
+
+.box-6 {
+  grid-column: auto/span 6;
+}
+
+.box-12 {
+  grid-column: auto/span 12;
+}
+
 .daily {
-  /* background-color: #222228; */
-  background-color: #e84063;
+  background-color: #222228;
 }
 
 .monthly {
-  /* background-color: #222228; */
-  background-color: #0186e5;
+  background-color: #222228;
+}
+
+.daily svg {
+  color: #0186e5;
+}
+
+.monthly svg {
+  color: #e84063;
 }
 
 .box label {
@@ -131,14 +175,14 @@ a.active {
   font-size: 20px;
 }
 
-.home input {
+.form input {
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
 }
 
-.home .btn-group {
+.form .btn-group {
   display: flex;
   justify-content: flex-end;
 }
@@ -176,7 +220,16 @@ a.active {
 }
 
 @media screen and (max-width: 576px) {
-  .home, .nav {
+  .nav h1 {
+    display: none;
+  }
+  .menu {
+    width: 100%;
+  }
+  .menu a {
+    margin: 0 10px !important;
+  }
+  .fitwidth, .nav {
     width: 100%;
   }
 }
