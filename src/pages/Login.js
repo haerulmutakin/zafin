@@ -4,16 +4,21 @@ import { Auth } from '_firebaseconn/firebase.config';
 
 const Login = () => {
     const browserHistory = useHistory();
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const doSignIn = () => {
+        setLoading(true);
         Auth.signInWithEmailAndPassword(email, password)
             .then(() => {
                 browserHistory.push('/')
             })
             .catch(err => {
                 console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
             })
     }
     return ( 
@@ -24,7 +29,9 @@ const Login = () => {
                 <div className="form">
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email..." />
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="sandi..."/>
-                    <button onClick={doSignIn} >Login</button>
+                    <button disabled={loading} className="btn-primary" onClick={doSignIn}>
+                        {loading ? 'Loading' : 'Login'}
+                    </button>
                 </div>
             </div>
         </div>
