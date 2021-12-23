@@ -3,9 +3,11 @@ import Navbar from "../components/Navbar";
 import Home from "../pages/Home";
 import Survey from '../pages/Survey';
 import Monthly from '../pages/Monthly';
+import RecapProvider from '_provider/RecapProvider';
+
 const Core = () => {
     return ( 
-        <div>
+        <RecapProvider>
             <Navbar />
             <div className="main">
             <Switch>
@@ -14,7 +16,7 @@ const Core = () => {
                 <Route path="/survey" component={Survey} />
             </Switch>
             </div>
-        </div>
+        </RecapProvider>
      );
 }
  
