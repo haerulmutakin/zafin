@@ -13,7 +13,7 @@ const ShoppingForm = ({title}) => {
 
     let focusInput = null;
     const [name, setName] = useState('');
-    const [priceTemp, setPriceTemp] = useState('');
+    const [priceTemp, setPriceTemp] = useState(null);
     const [price, setPrice] = useState('');
 
     const handlePriceChange = (e) => {
@@ -54,7 +54,7 @@ const ShoppingForm = ({title}) => {
     const reset = () => {
         setName('');
         setPrice('');
-        setPriceTemp('');
+        setPriceTemp(null);
         focusInput.focus();
     }
 
@@ -64,11 +64,13 @@ const ShoppingForm = ({title}) => {
     }
 
     useEffect(() => {
-        const replcaeDot = priceTemp.replaceAll('.', '');
-        const reg = new RegExp('^[0-9]+$');
-        if (reg.test(replcaeDot)) {
-            const nominal = Number(replcaeDot).toLocaleString('id-ID', {maximumFractionDigits: 0});
-            setPrice(nominal);
+        if (priceTemp) {
+            const replcaeDot = priceTemp.replaceAll('.', '');
+            const reg = new RegExp('^[0-9]+$');
+            if (reg.test(replcaeDot)) {
+                const nominal = Number(replcaeDot).toLocaleString('id-ID', {maximumFractionDigits: 0});
+                setPrice(nominal);
+            }
         }
     }, [priceTemp]);
 
