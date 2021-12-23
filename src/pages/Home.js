@@ -1,21 +1,23 @@
-import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { useEffect, useState, useContext } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { AuthContext } from '_provider/AuthProvider';
 import firebaseDB from '_firebaseconn/firebase.config';
 import ShoppingList from "../components/ShoppingList";
+import ShoppingForm from "components/ShoppingForm";
 
 const Home = () => {
-    const projectsDB = firebaseDB.firestore().collection('pengeluaran');
-    let focusInput = null;
+    const outcomeDB = firebaseDB.firestore().collection('pengeluaran');
+    const currentUser = useContext(AuthContext);
+
     const [data, setData ] = useState([]);
-    const [name, setName] = useState('');
-    const [priceTemp, setPriceTemp] = useState('');
-    const [price, setPrice] = useState('');
     const [dailyTotal, setDailyTotal] = useState(0);
     const [monthlyTotal, setMonthlyTotal] = useState(0);
 
     const getMonthlyReport = () => {
         const date = new Date();
-        projectsDB
+        outcomeDB
+            .where('userId', '==', currentUser.uid)
             .where('time', '>=', new Date(date.getFullYear(), date.getMonth(), 1).getTime())
             .where('time', '<=', new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime())
             .onSnapshot(response => {
@@ -29,7 +31,8 @@ const Home = () => {
     }
 
     const getShoppingList = () => {
-        projectsDB
+        outcomeDB
+            .where('userId', '==', currentUser.uid)
             .where('createdAt', '==', new Date().toISOString().split('T')[0])
             .orderBy('time', 'desc')
             .onSnapshot(response => {
@@ -46,76 +49,35 @@ const Home = () => {
             })
     }
 
-    const submit = () => {
-        const date = new Date();
-        const payload = {
-            id: uuidv4(),
-            name,
-            price: price.replaceAll('.', ''),
-            time: date.getTime(),
-            createdAt: date.toISOString().split('T')[0]
-        };
-        projectsDB
-            .doc(payload.id)
-            .set(payload);
-        reset();
-    }
-
-    const reset = () => {
-        setName('');
-        setPrice('');
-        setPriceTemp('');
-        focusInput.focus();
-    }
-
     const handleDelete = (id) => {
-        projectsDB
-            .doc(id)
-            .delete()
-    }
-
-    const handlePriceChange = (e) => {
-        const value = e.target.value;
-        setPriceTemp(value);
+        outcomeDB.doc(id).delete()
     }
 
     useEffect(() => {
-        const replcaeDot = priceTemp.replaceAll('.', '');
-        const reg = new RegExp('^[0-9]+$');
-        if (reg.test(replcaeDot)) {
-            const nominal = Number(replcaeDot).toLocaleString('id-ID', {maximumFractionDigits: 0});
-            setPrice(nominal);
-        }
-    }, [priceTemp]);
-
-    useEffect(() => {
-        focusInput.focus();
         getShoppingList();
         getMonthlyReport();
     }, []);
 
     return ( 
-        <div className="home">
+        <div className="fitwidth">
             <div className="summary-box">
-                <div className="box daily">
-                    <label>Pengeluaran Hari Ini</label>
-                    <p>{dailyTotal}</p>
+                <div className="box box-6 daily">
+                    <FontAwesomeIcon icon={faClock} />
+                    <div>
+                        <label>Hari Ini</label>
+                        <p>{dailyTotal}</p>
+                    </div>
                 </div>
-                <div className="box monthly">
-                    <label>Pengeluaran Bulan Ini</label>
-                    <p>{monthlyTotal}</p>
-                </div>
-            </div>
-            <h4>Yuk, catat pengeluaran hari ini!</h4>
-            <div className="form">
-                <input ref={(input) => focusInput = input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="nama barang..." />
-                <input type="text" value={price} onChange={handlePriceChange} placeholder="harga..."/>
-                <div className="btn-group">
-                    <button onClick={reset}>Reset</button>
-                    <button onClick={submit} >Simpan</button>
+                <div className="box box-6 monthly">
+                    <FontAwesomeIcon icon={faCalendar} />
+                    <div>
+                        <label>Bulan Ini</label>
+                        <p>{monthlyTotal}</p>
+                    </div>
                 </div>
             </div>
-            <ShoppingList data={data} onDelete={handleDelete} />
+            <ShoppingForm title="Yuk, catat pengeluaran hari ini!"/>
+            <ShoppingList title="Pengeluaran hari ini" data={data} deleteable={true} onDelete={handleDelete} />
         </div>
      );
 }
