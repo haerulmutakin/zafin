@@ -24,7 +24,6 @@ const Home = () => {
             let total = 0;
             doc.docs.forEach(element => {
                 const item = element.data();
-                item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
                 data.push(item);
                 total += (parseFloat(item.price));
             });

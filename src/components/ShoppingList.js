@@ -26,7 +26,7 @@ const ShoppingList = ({data, deleteable = false}) => {
                     <div key={item.id} className="sl-item">
                         <div className="item-info">
                             <p>{item.name}</p>
-                            <p className="item-price">{item.price_label}</p>
+                            <p className="item-price">{Number(item?.price).toLocaleString('id-ID', {minimumFractionDigits: 0})}</p>
                         </div>
                         {deleteable && <span className="btn-del" onClick={() => handleDelete(item)}>&#10005;</span> }
                     </div>
