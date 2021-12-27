@@ -13,7 +13,7 @@ const Graph = () => {
     const currentUser = useContext(AuthContext);
     const recap = useContext(RecapContext);
     
-    const [data, setData ] = useState([]);
+    const [data, setData ] = useState({});
 
     const getMonthlyReport = () => {
         const date = new Date();
@@ -27,13 +27,18 @@ const Graph = () => {
         );
 
         unsubscribe = onSnapshot(q, (doc) => {
-            const data = [];
-            doc.docs.forEach(element => {
-                const item = element.data();
-                item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
-                data.push(item);
-            });
-            setData(data);
+            const docs = doc.docs;
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const group = docs.reduce((obj, item) => {
+                const itemData = item.data();
+                const localeDate = new Date(itemData.createdAt).toLocaleDateString('id-ID', options);
+                if (!obj[localeDate]) {
+                    obj[localeDate] = [];
+                }
+                obj[localeDate].push(itemData);
+                return obj;
+            }, {});
+            setData(group);
         });
     }
 
@@ -54,7 +59,13 @@ const Graph = () => {
             </div>
             <h4>Pengeluaran bulan ini</h4>
             <div className="monthly-shopping-container">
-                <ShoppingList data={data} />
+                {Object.keys(data).map((key) => (
+                    <div key={key}>
+                        <div className="shopping-date">{key}</div>
+                        <ShoppingList data={data[key]} />
+                    </div>
+                ))}
+                
             </div>
         </div>
      );

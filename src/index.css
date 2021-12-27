@@ -167,6 +167,11 @@ a.active {
   background-color: #222228;
 }
 
+.shopping-date {
+  font-weight: bold;
+  margin-bottom: 10px !important;
+}
+
 .daily svg {
   color: #0186e5;
 }
