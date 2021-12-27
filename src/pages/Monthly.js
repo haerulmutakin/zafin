@@ -1,13 +1,15 @@
 import { useState, useEffect, useContext } from "react";
+import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '_provider/AuthProvider';
 import { RecapContext } from '_provider/RecapProvider';
-import firebaseDB from '_firebaseconn/firebase.config';
+import { firebaseDB } from '_firebaseconn/firebase.config';
 import ShoppingList from "../components/ShoppingList";
 
 const Graph = () => {
-    const projectsDB = firebaseDB.firestore().collection('pengeluaran');
+    let unsubscribe;
+    const outcomeDB = collection(firebaseDB, 'pengeluaran');
     const currentUser = useContext(AuthContext);
     const recap = useContext(RecapContext);
     
@@ -15,31 +17,29 @@ const Graph = () => {
 
     const getMonthlyReport = () => {
         const date = new Date();
-        projectsDB
-            .where('userId', '==', currentUser.uid)
-            .where('time', '>=', new Date(date.getFullYear(), date.getMonth(), 1).getTime())
-            .where('time', '<=', new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime())
-            .orderBy('time', 'desc')
-            .onSnapshot(response => {
-                const data = [];
-                response.forEach(element => {
-                    const item = element.data();
-                    item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
-                    data.push(item);
-                });
-                setData(data);
-            })
+
+        const q = query(
+            outcomeDB,
+            orderBy('time', 'desc'),
+            where('userId', '==', currentUser.uid),
+            where('time', '>=', new Date(date.getFullYear(), date.getMonth(), 1).getTime()),
+            where('time', '<=', new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime())
+        );
+
+        unsubscribe = onSnapshot(q, (doc) => {
+            const data = [];
+            doc.docs.forEach(element => {
+                const item = element.data();
+                item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
+                data.push(item);
+            });
+            setData(data);
+        });
     }
 
     useEffect(() => {
-        let mounted = true;
-        if (mounted) {
-            getMonthlyReport();
-        }
-
-        return () => {
-            mounted = false;
-        }
+        getMonthlyReport();
+        return () => unsubscribe();
     }, []);
     return ( 
         <div className="fitwidth">

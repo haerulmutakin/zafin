@@ -1,12 +1,14 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import { collection, onSnapshot, query, where, doc, setDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthContext } from '_provider/AuthProvider';
-import firebaseDB from '_firebaseconn/firebase.config';
+import { firebaseDB } from '_firebaseconn/firebase.config';
 
 export const RecapContext = createContext({ recap: null });
 const RecapProvider = (props) => {
+    let unsubscribe;
     const currentUser = useContext(AuthContext);
-    const recapDB = firebaseDB.firestore().collection('rekap');
+    const recapDB = collection(firebaseDB, 'rekap');
 
     const [data, setData] = useState(null);
 
@@ -18,30 +20,23 @@ const RecapProvider = (props) => {
             userId: currentUser.uid
         }
 
-        recapDB
-            .doc(payload.id)
-            .set(payload)
+        const ref = doc(firebaseDB, 'rekap', payload.id);
+        setDoc(ref, payload);
     }
 
     useEffect(() => {
-        let mounted = true;
         const date = new Date().toISOString().substring(0, 7);
-        recapDB
-            .where('userId', '==', currentUser.uid)
-            .where('periode', '==', date)
-            .onSnapshot(response => {
-                if (response.empty) {
-                    createRecap(date);
-                } else {
-                    const data = response.docs[0].data();
-                    if (mounted) {
-                        setData(data);
-                    }
-                }
-            });
-        return () => {
-            mounted = false;
-        }
+        const q = query(recapDB, where('periode', '==', '2021-12'), where('userId', '==', currentUser.uid))
+        unsubscribe = onSnapshot(q, (doc) => {
+            if(doc.empty) {
+                createRecap(date);
+            } else {
+                const data = doc.docs[0].data();
+                setData(data);
+            }
+        });
+
+        return () => unsubscribe();
     }, []);
 
     return ( 

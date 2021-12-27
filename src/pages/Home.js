@@ -1,48 +1,41 @@
 import { useEffect, useState, useContext } from "react";
+import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { firebaseDB } from '_firebaseconn/firebase.config';
 import { AuthContext } from '_provider/AuthProvider';
 import { RecapContext } from '_provider/RecapProvider';
-import firebaseDB from '_firebaseconn/firebase.config';
 import ShoppingList from "../components/ShoppingList";
 import ShoppingForm from "components/ShoppingForm";
 
 const Home = () => {
-    const outcomeDB = firebaseDB.firestore().collection('pengeluaran');
+    const outcomeDB = collection(firebaseDB, 'pengeluaran');
     const currentUser = useContext(AuthContext);
     const recap = useContext(RecapContext);
+    let unsubscribe;
 
     const [data, setData ] = useState([]);
     const [dailyTotal, setDailyTotal] = useState(0);
 
     const getShoppingList = () => {
-        outcomeDB
-            .where('userId', '==', currentUser.uid)
-            .where('createdAt', '==', new Date().toISOString().split('T')[0])
-            .orderBy('time', 'desc')
-            .onSnapshot(response => {
-                const data = [];
-                let total = 0;
-                response.forEach(element => {
-                    const item = element.data();
-                    item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
-                    data.push(item);
-                    total += (parseFloat(item.price));
-                });
-                setData(data);
-                setDailyTotal(total.toLocaleString('id-ID', {minimumFractionDigits: 0}));
-            })
+        const q = query(outcomeDB, orderBy('time', 'desc'), where('userId', '==', currentUser.uid), where('createdAt', '==', new Date().toISOString().split('T')[0]));
+        unsubscribe = onSnapshot(q, (doc) => {
+            const data = [];
+            let total = 0;
+            doc.docs.forEach(element => {
+                const item = element.data();
+                item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
+                data.push(item);
+                total += (parseFloat(item.price));
+            });
+            setData(data);
+            setDailyTotal(total.toLocaleString('id-ID', {minimumFractionDigits: 0}));
+        })
     }
 
     useEffect(() => {
-        let mounted = true;
-        if (mounted) {
-            getShoppingList();
-        }
-
-        return () => {
-            mounted = false;
-        }
+        getShoppingList();
+        return () => unsubscribe();
     }, []);
 
     return (

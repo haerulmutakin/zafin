@@ -1,38 +1,39 @@
-import React, { createContext } from 'react';
-import { Auth } from '_firebaseconn/firebase.config';
+import { useState, useEffect, createContext } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export const AuthContext = createContext({ user: null });
-class AuthProvider extends React.Component {
-    state = {
-      user: null,
-      loading: true
-    }
+const  AuthProvider = (props) => {
+  let unsubscribe;
+  const authentication = getAuth();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    componentDidMount = () => {
-      Auth.onAuthStateChanged(userAuth => {
-          if (userAuth) {
-            const userDetail = {
-              uid: userAuth?.uid,
-              email: userAuth?.email,
-            }
-            this.setState({ user: userDetail, loading: false});
-          } else {
-            this.setState({user: null, loading: false})
-          }   
-        });
-    }
-    render() {
-        return (
-          <AuthContext.Provider value={this.state.user}>
-            {this.state.loading === false ? <div>
-              {this.props.children}
-            </div>
-            :
-            <div className="loader-container">Loading..</div>
-            }
-          </AuthContext.Provider>
-        );
+
+  useEffect(() => {
+    unsubscribe = onAuthStateChanged(authentication, (user) => {
+      // console.log(user.email);
+      if (user) {
+        const {uid, email} = user;
+        setUser({uid, email});
+        setLoading(false);
+      } else {
+        setUser(null);
+        setLoading(false);
       }
-}
+    });
+    return () => unsubscribe();
+  }, [authentication]);
 
+  return ( 
+    <AuthContext.Provider value={user}>
+      {loading === false ? <div>
+        {props.children}
+      </div>
+      :
+      <div className="loader-container">Loading..</div>
+      }
+    </AuthContext.Provider>
+   );
+}
+ 
 export default AuthProvider;

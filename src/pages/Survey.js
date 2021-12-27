@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { collection, onSnapshot, setDoc, doc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
-import firebaseDB from '_firebaseconn/firebase.config';
+import { firebaseDB } from '_firebaseconn/firebase.config';
 import SurveyList from 'components/SurveyList';
 
 const Survey = () => {
-    const surveyDB = firebaseDB.firestore().collection('survey');
-
+    const surveyDB = collection(firebaseDB, 'survey');
+    let unsubscribe;
     const [data, setData] = useState([]);
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -13,16 +14,15 @@ const Survey = () => {
     const [seller, setSeller] = useState('');
 
     const getSurveyList = () => {
-        surveyDB
-            .onSnapshot(response => {
-                const data = [];
-                response.forEach(element => {
-                    const item = element.data();
-                    item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
-                    data.push(item);
-                });
-                setData(data);
-            })
+        unsubscribe = onSnapshot(surveyDB, (doc) => {
+            const data = [];
+            doc.docs.forEach(element => {
+                const item = element.data();
+                item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
+                data.push(item);
+            });
+            setData(data);
+        });
     }
 
     const handlePriceChange = (e) => {
@@ -37,10 +37,9 @@ const Survey = () => {
             price: price.replaceAll('.', ''),
             seller
         };
-        surveyDB
-            .doc(payload.id)
-            .set(payload);
-        reset();
+
+        const ref = doc(firebaseDB, 'survey', payload.id);
+        setDoc(ref, payload);
     }
 
     const reset = () => {
@@ -67,6 +66,7 @@ const Survey = () => {
 
     useState(() => {
         getSurveyList();
+        return () => unsubscribe();
     }, []);
 
     return ( 

@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
+import { getAuth, signOut } from "firebase/auth";
+import { setDoc, doc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
-import { Auth } from "_firebaseconn/firebase.config";
-import firebaseDB from '_firebaseconn/firebase.config';
+import { firebaseDB } from '_firebaseconn/firebase.config';
 import { AuthContext } from '_provider/AuthProvider';
 import { RecapContext } from '_provider/RecapProvider';
 
 const ShoppingForm = ({title}) => {
-    const outcomeDB = firebaseDB.firestore().collection('pengeluaran');
-    const recapDB = firebaseDB.firestore().collection('rekap');
     const currentUser = useContext(AuthContext);
     const recap = useContext(RecapContext);
 
@@ -37,18 +36,17 @@ const ShoppingForm = ({title}) => {
             userId: currentUser.uid,
             createdAt: date.toISOString().split('T')[0]
         };
-        outcomeDB
-            .doc(payload.id)
-            .set(payload);
+        const ref = doc(firebaseDB, 'pengeluaran', payload.id);
+        setDoc(ref, payload);
     }
 
     const updateRecap = () => {
         const recapPayload = recap;
         const total = Number(recapPayload.total) + Number(price.replaceAll('.', ''));
         recapPayload.total = total.toString();
-        recapDB
-            .doc(recapPayload.id)
-            .update(recapPayload);
+
+        const ref = doc(firebaseDB, 'rekap', recapPayload.id);
+        setDoc(ref, recapPayload);
     }
 
     const reset = () => {
@@ -59,8 +57,12 @@ const ShoppingForm = ({title}) => {
     }
 
     const doLogout = () => {
-        Auth.signOut()
-            .catch(err => console.warn(err))
+        const auth = getAuth();
+        signOut(auth).then(() => {
+            // Sign-out successful.
+          }).catch((error) => {
+            // An error happened.
+          });
     }
 
     useEffect(() => {

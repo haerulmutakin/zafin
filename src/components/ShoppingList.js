@@ -1,14 +1,13 @@
 import { useContext } from 'react';
-import firebaseDB from '_firebaseconn/firebase.config';
+import { setDoc, doc, deleteDoc } from 'firebase/firestore';
+import { firebaseDB } from '_firebaseconn/firebase.config';
 import { RecapContext } from '_provider/RecapProvider';
 
 const ShoppingList = ({data, deleteable = false}) => {
-    const outcomeDB = firebaseDB.firestore().collection('pengeluaran');
-    const recapDB = firebaseDB.firestore().collection('rekap');
     const recap = useContext(RecapContext);
 
     const handleDelete = (data) => {
-        outcomeDB.doc(data.id).delete();
+        deleteDoc(doc(firebaseDB, 'pengeluaran', data.id));
         updateRecap(data);
     }
 
@@ -16,9 +15,9 @@ const ShoppingList = ({data, deleteable = false}) => {
         const recapPayload = recap;
         const total = Number(recapPayload.total) - Number(data.price.replaceAll('.', ''));
         recapPayload.total = total.toString();
-        recapDB
-            .doc(recapPayload.id)
-            .update(recapPayload);
+
+        const ref = doc(firebaseDB, 'rekap', recapPayload.id);
+        setDoc(ref, recapPayload);
     }
     return ( 
         <div className="shopping-list">
