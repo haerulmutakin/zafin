@@ -1,9 +1,10 @@
 import { Route, Switch } from 'react-router-dom';
+import RecapProvider from '_provider/RecapProvider';
 import Navbar from "../components/Navbar";
 import Home from "../pages/Home";
 import Survey from '../pages/Survey';
 import Monthly from '../pages/Monthly';
-import RecapProvider from '_provider/RecapProvider';
+import Summary from 'pages/summary';
 
 const Core = () => {
     return ( 
@@ -14,6 +15,7 @@ const Core = () => {
                 <Route exact path="/" component={Home} />
                 <Route path="/monthly" component={Monthly} />
                 <Route path="/survey" component={Survey} />
+                <Route path="/summary" component={Summary} />
             </Switch>
             </div>
         </RecapProvider>

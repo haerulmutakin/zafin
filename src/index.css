@@ -129,7 +129,7 @@ a.active {
 
 .summary-box {
   display: grid;
-  grid-column-gap: 10px;
+  grid-gap: 10px;
   grid-template-columns: repeat(12, 1fr);
   margin-bottom: 20px;
 }
@@ -149,6 +149,10 @@ a.active {
 
 .box div {
   margin-left: 10px;
+}
+
+.box-4 {
+  grid-column: auto/span 4;
 }
 
 .box-6 {
@@ -245,6 +249,25 @@ a.active {
 .survey-list-container {
   height: calc(100vh - 345px);
   overflow-y: auto;
+}
+
+.year-summary-container {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.summary-month-item {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  background-color: #222228;
+  padding: 10px;
+  height: 60px;
+}
+
+.summary-month-item label {
+  font-size: 18px;
 }
 
 @media screen and (max-width: 576px) {
