@@ -270,11 +270,13 @@ a.active {
   flex-direction: column;
   border-radius: 4px;
   background-color: #222228;
+  border: thin solid #4a4949;
   padding: 10px;
   height: 60px;
 }
 
 .summary-month-item label {
+  font-weight: bold;
   font-size: 18px;
 }
 
