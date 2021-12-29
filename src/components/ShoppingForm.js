@@ -90,7 +90,7 @@ const ShoppingForm = ({title}) => {
                 <input ref={(input) => focusInput = input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="nama barang..." />
                 <input type="text" value={price} onChange={handlePriceChange} placeholder="harga..."/>
                 <div className="btn-group">
-                    <button type="button" className="btn-danger" onClick={doLogout}>Reset</button>
+                    <button type="button" className="btn-danger" onClick={reset}>Reset</button>
                     <button className="btn-primary" >Simpan</button>
                 </div>
             </form>
