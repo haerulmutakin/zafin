@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, setDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { firebaseDB } from '_firebaseconn/firebase.config';
 import SurveyList from 'components/SurveyList';
@@ -30,16 +30,20 @@ const Survey = () => {
         setPriceTemp(value);
     }
 
-    const submit = () => {
-        const payload = {
-            id: uuidv4(),
-            name,
-            price: price.replaceAll('.', ''),
-            seller
-        };
-
-        const ref = doc(firebaseDB, 'survey', payload.id);
-        setDoc(ref, payload);
+    const submit = (e) => {
+        e.preventDefault();
+        if (name && price && seller) {
+            const payload = {
+                id: uuidv4(),
+                name,
+                price: price.replaceAll('.', ''),
+                seller
+            };
+    
+            const ref = doc(firebaseDB, 'survey', payload.id);
+            setDoc(ref, payload);
+            reset();
+        }
     }
 
     const reset = () => {
@@ -59,9 +63,7 @@ const Survey = () => {
     }, [priceTemp]);
 
     const handleDelete = (id) => {
-        surveyDB
-            .doc(id)
-            .delete()
+        deleteDoc(doc(firebaseDB, 'survey', id));
     }
 
     useState(() => {
@@ -72,15 +74,15 @@ const Survey = () => {
     return ( 
         <div className="fitwidth">
             <h4>Masukkan toko rekomendasi</h4>
-            <div className="form">
+            <form className="form" onSubmit={submit}>
                 <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="nama barang..." />
                 <input type="text" value={seller} onChange={(e) => setSeller(e.target.value)} placeholder="penjual..."/>
                 <input type="text" value={price} onChange={handlePriceChange} placeholder="harga..."/>
                 <div className="btn-group">
-                    <button className='btn-danger' onClick={reset}>Reset</button>
-                    <button className='btn-primary' onClick={submit} >Simpan</button>
+                    <button type="button" className='btn-danger' onClick={reset}>Reset</button>
+                    <button className='btn-primary'>Simpan</button>
                 </div>
-            </div>
+            </form>
             <h4>Rekomendasi toko dan harga</h4>
             <div className='survey-list-container'>
                 <SurveyList data={data} onDelete={handleDelete} />

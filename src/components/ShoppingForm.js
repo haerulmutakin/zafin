@@ -20,10 +20,13 @@ const ShoppingForm = ({title}) => {
         setPriceTemp(value);
     }
     
-    const submit = () => {
-        addShoppingList();
-        updateRecap();
-        reset();
+    const submit = (e) => {
+        e.preventDefault();
+        if (name && price) {
+            addShoppingList();
+            updateRecap();
+            reset();
+        }
     }
 
     const addShoppingList = () => {
@@ -83,14 +86,14 @@ const ShoppingForm = ({title}) => {
     return (
         <React.Fragment>
             <h4>{title}</h4>
-            <div className="form">
+            <form className="form" onSubmit={submit}>
                 <input ref={(input) => focusInput = input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="nama barang..." />
                 <input type="text" value={price} onChange={handlePriceChange} placeholder="harga..."/>
                 <div className="btn-group">
-                    <button className="btn-danger" onClick={doLogout}>Reset</button>
-                    <button className="btn-primary" onClick={submit} >Simpan</button>
+                    <button type="button" className="btn-danger" onClick={doLogout}>Reset</button>
+                    <button className="btn-primary" >Simpan</button>
                 </div>
-            </div>
+            </form>
         </React.Fragment>
      );
 }
