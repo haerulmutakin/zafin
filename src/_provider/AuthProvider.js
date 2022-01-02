@@ -11,7 +11,6 @@ const  AuthProvider = (props) => {
 
   useEffect(() => {
     unsubscribe = onAuthStateChanged(authentication, (user) => {
-      // console.log(user.email);
       if (user) {
         const {uid, email} = user;
         setUser({uid, email});

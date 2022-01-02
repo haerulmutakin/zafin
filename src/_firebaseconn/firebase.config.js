@@ -19,7 +19,6 @@ const messaging = getMessaging(firebase);
 getToken(messaging, { vapidKey: 'BJS5I4C8Fr2cCtu10mYpC02oxhHeeCnGnLRUbJrExW5XAADSuBZLXqed6GiKGBxO61Z4LQ8CVszuzg6a11mDtqQ' }).then((currentToken) => {
   if (currentToken) {
     // Send the token to your server and update the UI if necessary
-    console.log(currentToken);
     // ...
   } else {
     // Show permission request UI
