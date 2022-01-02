@@ -1,28 +1,30 @@
-import { useState, useEffect } from 'react';
-import { collection, onSnapshot, setDoc, doc, deleteDoc } from 'firebase/firestore';
+import { useState, useEffect, useContext } from 'react';
+import { collection, orderBy, where, query, getDocs, setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { firebaseDB } from '_firebaseconn/firebase.config';
+import { AuthContext } from '_provider/AuthProvider';
 import SurveyList from 'components/SurveyList';
 
 const Survey = () => {
     const surveyDB = collection(firebaseDB, 'survey');
-    let unsubscribe;
+    const currentUser = useContext(AuthContext);
     const [data, setData] = useState([]);
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [priceTemp, setPriceTemp] = useState('');
     const [seller, setSeller] = useState('');
 
-    const getSurveyList = () => {
-        unsubscribe = onSnapshot(surveyDB, (doc) => {
-            const data = [];
-            doc.docs.forEach(element => {
-                const item = element.data();
-                item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
-                data.push(item);
-            });
-            setData(data);
+    const getSurveyList = async () => {
+        const q = query(surveyDB, orderBy('time', 'desc'), where('userId', '==', currentUser.uid));
+        const querySnapshoot = await getDocs(q);
+        const docs = querySnapshoot.docs;
+        const data = [];
+        docs.forEach(element => {
+            const item = element.data();
+            item.price_label = parseFloat(item.price).toLocaleString('id-ID', {minimumFractionDigits: 0});
+            data.push(item);
         });
+        setData(data);
     }
 
     const handlePriceChange = (e) => {
@@ -37,11 +39,13 @@ const Survey = () => {
                 id: uuidv4(),
                 name,
                 price: price.replaceAll('.', ''),
-                seller
+                seller,
+                time: new Date().getTime(),
+                userId: currentUser.uid
             };
-    
             const ref = doc(firebaseDB, 'survey', payload.id);
             setDoc(ref, payload);
+            getSurveyList();
             reset();
         }
     }
@@ -64,11 +68,11 @@ const Survey = () => {
 
     const handleDelete = (id) => {
         deleteDoc(doc(firebaseDB, 'survey', id));
+        getSurveyList();
     }
 
     useState(() => {
         getSurveyList();
-        return () => unsubscribe();
     }, []);
 
     return ( 

@@ -3,7 +3,7 @@ import { setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { firebaseDB } from '_firebaseconn/firebase.config';
 import { RecapContext } from '_provider/RecapProvider';
 
-const ShoppingList = ({data, deleteable = false}) => {
+const ShoppingList = ({data, deleteable = false, onDelete}) => {
     const recap = useContext(RecapContext);
 
     const handleDelete = (data) => {
@@ -18,6 +18,7 @@ const ShoppingList = ({data, deleteable = false}) => {
 
         const ref = doc(firebaseDB, 'rekap', recapPayload.id);
         setDoc(ref, recapPayload);
+        onDelete();
     }
     return ( 
         <div className="shopping-list">
@@ -26,7 +27,7 @@ const ShoppingList = ({data, deleteable = false}) => {
                     <div key={item.id} className="sl-item">
                         <div className="item-info">
                             <p>{item.name}</p>
-                            <p className="item-price">{Number(item?.price).toLocaleString('id-ID', {minimumFractionDigits: 0})}</p>
+                            <p className="item-price">Rp. {Number(item?.price).toLocaleString('id-ID', {minimumFractionDigits: 0})}</p>
                         </div>
                         {deleteable && <span className="btn-del" onClick={() => handleDelete(item)}>&#10005;</span> }
                     </div>

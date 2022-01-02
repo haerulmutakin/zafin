@@ -6,7 +6,7 @@ import { firebaseDB } from '_firebaseconn/firebase.config';
 import { AuthContext } from '_provider/AuthProvider';
 import { RecapContext } from '_provider/RecapProvider';
 
-const ShoppingForm = ({title}) => {
+const ShoppingForm = ({title, onDataAdded}) => {
     const currentUser = useContext(AuthContext);
     const recap = useContext(RecapContext);
 
@@ -41,6 +41,7 @@ const ShoppingForm = ({title}) => {
         };
         const ref = doc(firebaseDB, 'pengeluaran', payload.id);
         setDoc(ref, payload);
+        onDataAdded();
     }
 
     const updateRecap = () => {

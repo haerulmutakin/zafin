@@ -9,7 +9,7 @@ const SurveyList = ({data, deleteable = true, onDelete}) => {
                         <div className="item-info">
                             <p>{item.name}</p>
                             <p className="item-price">{item.seller}</p>
-                            <p className="item-price">{item.price_label}</p>
+                            <p className="item-price">Rp. {item.price_label}</p>
                         </div>
                         {deleteable && <span className="btn-del" onClick={() => onDelete(item.id)}>&#10005;</span> }
                     </div>
