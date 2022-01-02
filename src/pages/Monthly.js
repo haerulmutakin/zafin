@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { collection, onSnapshot, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '_provider/AuthProvider';
@@ -32,9 +32,10 @@ const Graph = () => {
             const itemData = item.data();
             const localeDate = new Date(itemData.createdAt).toLocaleDateString('id-ID', options);
             if (!obj[localeDate]) {
-                obj[localeDate] = [];
+                obj[localeDate] = {data: [], total: 0};
             }
-            obj[localeDate].push(itemData);
+            obj[localeDate]['total'] += Number(itemData.price);
+            obj[localeDate]['data'].push(itemData);
             return obj;
         }, {});
         setData(group);
@@ -50,7 +51,7 @@ const Graph = () => {
                     <FontAwesomeIcon icon={faCalendar} />
                     <div>
                         <label>Bulan Ini</label>
-                        <p>{Number(recap?.total).toLocaleString('id-ID', {minimumFractionDigits: 0})}</p>
+                        <p>Rp. {Number(recap?.total).toLocaleString('id-ID', {minimumFractionDigits: 0})}</p>
                     </div>
                 </div>
             </div>
@@ -58,8 +59,11 @@ const Graph = () => {
             <div className="monthly-shopping-container">
                 {Object.keys(data).map((key) => (
                     <div key={key}>
-                        <div className="shopping-date">{key}</div>
-                        <ShoppingList data={data[key]} />
+                        <div className="shopping-date">
+                            <span>{key}</span>
+                            <span>Rp. {data[key]['total'].toLocaleString('id-ID', {minimumFractionDigits: 0})}</span>
+                        </div>
+                        <ShoppingList data={data[key]['data']} deleteable={true} />
                     </div>
                 ))}
                 
