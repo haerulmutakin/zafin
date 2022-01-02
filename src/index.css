@@ -5,7 +5,6 @@ body {
   padding: 0;
   font-size: 13px;
   color: #dee6fd;
-  /* background-color: #3350a1; */
   background-color: #17171a;
   font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -75,7 +74,7 @@ nav {
 
 .nav {
   width: 450px;
-  padding: 10px 0;
+  padding: 7px 0;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -94,10 +93,9 @@ nav {
 }
 
 .menu a {
-  margin-left: 8px;
+  margin-left: 4px;
   text-decoration: none;
   color: inherit;
-  font-size: 20px;
   padding: 3px 15px;
   border-radius: 4px;
   display: flex;
@@ -106,8 +104,13 @@ nav {
   justify-content: center;
 }
 
+.menu a svg {
+  font-size: 16px;
+  margin-top: 5px;
+}
+
 .menu a label {
-  font-size: 13px;
+  font-size: 11px;
   margin-top: 5px;
 }
 
@@ -145,7 +148,6 @@ a.active {
 .box {
   padding: 10px;
   border-radius: 4px;
-  /* text-align: center; */
   display: flex;
   align-items: center;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
@@ -182,6 +184,8 @@ a.active {
 .shopping-date {
   font-weight: bold;
   margin-bottom: 10px !important;
+  display: flex;
+  justify-content: space-between;
 }
 
 .daily svg {
@@ -224,7 +228,6 @@ a.active {
   margin-bottom: 10px;
   border-radius: 4px;
   background-color: #222228;
-  /* background-color: #031a56; */
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
@@ -261,23 +264,28 @@ a.active {
 
 .year-summary-container {
   display: grid;
-  grid-gap: 10px;
   grid-template-columns: repeat(12, 1fr);
+  border: thin solid #4a4949;
 }
 
 .summary-month-item {
   display: flex;
   flex-direction: column;
-  border-radius: 4px;
   background-color: #222228;
-  border: thin solid #4a4949;
   padding: 10px;
   height: 60px;
+  border-bottom: thin solid #4a4949;
+  border-right: thin solid #4a4949;
+}
+
+.year-summary-container:last-child {
+  border-right: none !important;
+  border-bottom: none !important;
 }
 
 .summary-month-item label {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 @media screen and (max-width: 576px) {
