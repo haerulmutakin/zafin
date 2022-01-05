@@ -288,6 +288,31 @@ a.active {
   font-size: 16px;
 }
 
+.user-list-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-new-user {
+  background-color: #222228;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.user-actions {
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-actions svg {
+  cursor: pointer;
+}
+
 @media screen and (max-width: 576px) {
   .nav h1 {
     display: none;
