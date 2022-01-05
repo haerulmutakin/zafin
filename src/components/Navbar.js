@@ -1,8 +1,11 @@
+import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faCalendar, faChartLine, faListAlt } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faCalendar, faChartLine, faListAlt, faCog } from '@fortawesome/free-solid-svg-icons';
+import { AuthContext } from '_provider/AuthProvider';
 
 const Navbar = () => {
+    const currentUser = useContext(AuthContext);
     return ( 
         <nav>
             <div className="nav">
@@ -24,6 +27,12 @@ const Navbar = () => {
                         <FontAwesomeIcon icon={faChartLine} />
                         <label>Ikhtisar</label>
                     </NavLink>
+                    {currentUser.uid === '84H94XYQ69fOumcCFmTxQXTVayz1' && (
+                        <NavLink to="/admin" activeClassName="active">
+                            <FontAwesomeIcon icon={faCog} />
+                            <label>Admin</label>
+                        </NavLink>
+                    )}
                 </div>
             </div>
         </nav>
