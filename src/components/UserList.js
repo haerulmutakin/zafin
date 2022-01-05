@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPencilAlt, faTrash} from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faTrash} from '@fortawesome/free-solid-svg-icons';
 
-const UserList = ({users, onDelete}) => {
+const UserList = ({users, onEdit, onDelete}) => {
     return ( 
         <div className="sl-items">
             {users.map((item) => (
@@ -11,8 +11,7 @@ const UserList = ({users, onDelete}) => {
                         <p>{item.email}</p>
                     </div>
                     <div className="user-actions">
-                        <FontAwesomeIcon icon={faEye} />
-                        <FontAwesomeIcon icon={faPencilAlt} />
+                        <FontAwesomeIcon icon={faPencilAlt}  onClick={() => onEdit(item)} />
                         <FontAwesomeIcon icon={faTrash} onClick={() => onDelete(item)} />
                     </div>
                 </div>
