@@ -3,19 +3,48 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Api from '_api/admin-api';
 import UserList from 'components/UserList';
+import ConfirmModal from 'widgets/ConfirmModal';
 
 const Admin = () => {
     const [users, setUsers] = useState([]);
+    const [show, setShow] = useState(false);
+    const [deleteUserId, setDeleteUserId] = useState(null);
 
-    const handleDelete = (id) => {
-        console.log(id);
+    const handleDelete = (data) => {
+        setDeleteUserId(data.uid);
+        setShow(true);
     }
 
-    useEffect(() => {
+    const handleModalClose = (confirm) => {
+        if (confirm) {
+            doDelete();
+            return;
+        }
+        setShow(false);
+    }
+    
+    const doDelete = () => {
+        Api.delete('/user/' + deleteUserId)
+            .then(() => {
+                getUsers();
+
+            })
+            .finally(() => {
+                setDeleteUserId(null);
+                setShow(false);
+            })
+
+    }
+
+    const getUsers = () => {
         Api.get('/user')
             .then(res => {
                 setUsers(res.data);
             })
+    }
+
+    useEffect(() => {
+        getUsers();
     }, [])
     return ( 
         <div className="fitwidth">
@@ -26,6 +55,14 @@ const Admin = () => {
                     &nbsp;<span>Add New</span>
                 </div>
             </div>
+            {show && (
+                <ConfirmModal
+                    type="danger"
+                    title="Are you sure want to delete this user?"
+                    subtitle="This action cannot be undo"
+                    onClose={handleModalClose}
+                />
+            )}
             <UserList users={users} onDelete={handleDelete} />
         </div>
      );

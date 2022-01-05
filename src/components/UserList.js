@@ -13,7 +13,7 @@ const UserList = ({users, onDelete}) => {
                     <div className="user-actions">
                         <FontAwesomeIcon icon={faEye} />
                         <FontAwesomeIcon icon={faPencilAlt} />
-                        <FontAwesomeIcon icon={faTrash} onClick={() => onDelete(item.uid)} />
+                        <FontAwesomeIcon icon={faTrash} onClick={() => onDelete(item)} />
                     </div>
                 </div>
             ))}
