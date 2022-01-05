@@ -318,14 +318,15 @@ a.active {
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background-color: rgba(0,0,0,0.8);
 }
 
 .modal-content {
   width: 450px;
-  margin: 0 auto;
+  height: auto;
+  margin: 60px auto;
   background-color: #17171a;
   border-radius: 8px;
 }
@@ -360,6 +361,10 @@ a.active {
   border-top: thin solid #4a4949;
 }
 
+.modal-footer .btn-group {
+  margin-bottom: 0 !important;
+}
+
 @media screen and (max-width: 576px) {
   .nav h1 {
     display: none;
@@ -368,7 +373,7 @@ a.active {
     width: 100%;
   }
   .menu a {
-    margin: 0 10px !important;
+    margin: 0 5px !important;
   }
   .fitwidth, .nav {
     width: 100%;
