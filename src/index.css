@@ -37,6 +37,11 @@ button {
   border: 1px solid #e84063;
 }
 
+.btn-sm {
+  min-width: unset;
+  padding: 5px;
+}
+
 input {
   border: 1px solid #222228;
   border-radius: 4px;
@@ -363,6 +368,16 @@ a.active {
 
 .modal-footer .btn-group {
   margin-bottom: 0 !important;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-body p {
+  margin-bottom: 10px;
 }
 
 @media screen and (max-width: 576px) {
