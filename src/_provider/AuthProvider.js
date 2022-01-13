@@ -12,8 +12,8 @@ const  AuthProvider = (props) => {
   useEffect(() => {
     unsubscribe = onAuthStateChanged(authentication, (user) => {
       if (user) {
-        const {uid, email} = user;
-        setUser({uid, email});
+        const {uid, email, displayName} = user;
+        setUser({uid, email, displayName});
         setLoading(false);
       } else {
         setUser(null);
