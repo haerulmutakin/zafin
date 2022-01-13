@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import { getAuth, signOut } from "firebase/auth";
 import { setDoc, doc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { firebaseDB } from '_firebaseconn/firebase.config';
@@ -58,15 +57,6 @@ const ShoppingForm = ({title, onDataAdded}) => {
         setPrice('');
         setPriceTemp(null);
         focusInput.focus();
-    }
-
-    const doLogout = () => {
-        const auth = getAuth();
-        signOut(auth).then(() => {
-            // Sign-out successful.
-          }).catch((error) => {
-            // An error happened.
-          });
     }
 
     useEffect(() => {
