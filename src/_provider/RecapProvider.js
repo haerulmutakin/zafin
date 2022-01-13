@@ -56,6 +56,7 @@ const RecapProvider = (props) => {
             tahun: year,
             bulan: month,
             total: '0',
+            userEmail: currentUser.email,
             userId: currentUser.uid
         }
 
