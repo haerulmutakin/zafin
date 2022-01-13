@@ -5,7 +5,7 @@ import Home from "../pages/Home";
 import Survey from '../pages/Survey';
 import Monthly from '../pages/Monthly';
 import Summary from 'pages/summary';
-import Admin from 'pages/Admin';
+import Profile from 'pages/Profile';
 
 const Core = () => {
     return ( 
@@ -17,7 +17,7 @@ const Core = () => {
                 <Route path="/monthly" component={Monthly} />
                 <Route path="/survey" component={Survey} />
                 <Route path="/summary" component={Summary} />
-                <Route path="/admin" component={Admin} />
+                <Route path="/profile" component={Profile} />
             </Switch>
             </div>
         </RecapProvider>
