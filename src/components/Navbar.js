@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faCalendar, faChartLine, faListAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faCalendar, faChartLine, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
     return ( 
@@ -15,10 +15,6 @@ const Navbar = () => {
                     <NavLink to="/monthly" activeClassName="active">
                         <FontAwesomeIcon icon={faCalendar} />
                         <label>Bulanan</label>
-                    </NavLink>
-                    <NavLink to="/survey" activeClassName="active">
-                        <FontAwesomeIcon icon={faListAlt} />
-                        <label>Survey</label>
                     </NavLink>
                     <NavLink to="/summary" activeClassName="active">
                         <FontAwesomeIcon icon={faChartLine} />
