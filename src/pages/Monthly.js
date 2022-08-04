@@ -47,7 +47,7 @@ const Graph = () => {
     return ( 
         <div className="fitwidth">
             <div className="summary-box">
-                <div className="box box-6 monthly">
+                <div className="box box-12 monthly">
                     <FontAwesomeIcon icon={faCalendar} />
                     <div>
                         <label>Bulan Ini</label>
