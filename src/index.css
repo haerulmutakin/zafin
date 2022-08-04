@@ -259,11 +259,6 @@ a.active {
   overflow-y: auto;
 }
 
-.survey-list-container {
-  height: calc(100vh - 345px);
-  overflow-y: auto;
-}
-
 .year-summary-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
