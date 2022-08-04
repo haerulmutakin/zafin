@@ -178,7 +178,7 @@ a.active {
   grid-column: auto/span 12;
 }
 
-.daily, .monthly {
+.daily, .monthly, .yearly {
   background-color: #222228;
 }
 
@@ -199,6 +199,10 @@ a.active {
 
 .monthly svg {
   color: #e84063;
+}
+
+.yearly svg {
+  color: bisque;
 }
 
 .box label {
